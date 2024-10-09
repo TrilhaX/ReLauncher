@@ -8,7 +8,7 @@ CURRENT_EXE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), CURR
 TEMP_ZIP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_atualizacao.zip')
 
 def get_current_version():
-    return "1.5"  # Versão atual sem o prefixo 'v'
+    return "1.0"  # Versão atual sem o prefixo 'v'
 
 def get_latest_version():
     try:
@@ -51,11 +51,12 @@ def extract_update():
     print("Extraindo atualização...")
     with zipfile.ZipFile(TEMP_ZIP_PATH, 'r') as zip_ref:
         zip_ref.extract(CURRENT_EXE_NAME, os.path.dirname(os.path.abspath(__file__)))
+    os.remove(TEMP_ZIP_PATH)
     print("Atualização extraída com sucesso.")
 
 def install_update():
     print("Instalando atualização...")
-    os.replace(TEMP_ZIP_PATH, CURRENT_EXE_PATH)
+    os.replace(os.path.join(os.path.dirname(os.path.abspath(__file__)), CURRENT_EXE_NAME), CURRENT_EXE_PATH)
     print("Atualização instalada com sucesso.")
 
 def clear_cmd():
