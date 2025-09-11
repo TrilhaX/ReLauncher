@@ -1,0 +1,17 @@
+{
+    "idPlayer": [
+        3120620682,
+        2606311766,
+        191837410
+    ],
+    "clients": [
+        "clienb",
+        "clienc",
+        "cliend"
+    ],
+    "clientToPlayer": {
+        "clienb": 3120620682,
+        "clienc": 2606311766,
+        "cliend": 191837410
+    }
+}

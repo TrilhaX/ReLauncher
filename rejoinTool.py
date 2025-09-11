@@ -1,46 +1,20 @@
-import requests
-import json
-urlToGetPresence = "https://presence.roblox.com/v1/presence/users"
-urlToGetPlayerInfo = "https://users.roblox.com/v1/users/"
-urlToGetGameInfo = "https://games.roblox.com/v1/games?universeIds="
+from scripts.getInfoPlayer import getInfoPlayer
+from scripts.createFiles import checkConfigFolder
+from scripts.manageFiles import saveConfig, loadConfig, resetConfigFile, checkIfAlrSaved, makeUrConfig
 
-def getInfoPlayer(userID):
-    headers = {'Content-Type': 'application/json'}
-    payload = {"userIds": [userID]}
-    allURLToPlayerInfo = urlToGetPlayerInfo + str(userID)
-    response = requests.get(allURLToPlayerInfo)
-    data = response.json()
+checkConfigFolder()
+if checkIfAlrSaved():
+    loadDecision = input("Do you want to load the last configuration? (y/n): ").lower()
+    if loadDecision == 'y':
+        configData = loadConfig()
+        idPlayer = configData.get("idPlayer", [])
+        clients = configData.get("clients", [])
+        clientToPlayer = configData.get("clientToPlayer", {})
+    else:
+        makeUrConfig()
+else:
+    makeUrConfig()
 
-    resp = requests.post(urlToGetPresence, headers=headers, data=json.dumps(payload))
-    playerName = data["name"]
-    respData = resp.json()
-    playerPresenceJson = respData["userPresences"][0]
-    presenceType = playerPresenceJson['userPresenceType']
-    universeID = playerPresenceJson["universeId"] or 1962086868
-
-    presenceMap = {
-        0: "Offline",
-        1: "Online",
-        2: "InGame",
-        3: "InStudio",
-        4: "Invisible"
-    }
-
-    playerPresence = presenceMap.get(presenceType, "Unknown")
-    gameInfo = getGameInfo(universeID)
-
-    print("-----------------------------------------")
-    print(playerName)
-    print(playerPresence)
-    print(gameInfo)
-    print("-----------------------------------------")
-
-def getGameInfo(universeIDAtual):
-    allUrlGame = urlToGetGameInfo + str(universeIDAtual)
-    response = requests.get(allUrlGame)
-    respJson = response.json()
-    data = respJson["data"][0]
-    nameGame = data["name"]
-    return nameGame
-
-getInfoPlayer(156)
+print(idPlayer)
+print(clients)
+print(clientToPlayer)
