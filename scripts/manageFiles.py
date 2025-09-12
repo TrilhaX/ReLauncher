@@ -44,6 +44,8 @@ def makeUrConfig():
         "clientToGame": clientToGame,
     }
 
+    cdTime = int(input("Cooldown time (in seconds) to check if the player is in game (default is 10): ") or 10)
+    configData["cdTime"] = cdTime
     configDecision = input("Do you want to save this configuration? (y/n): ").lower()
     if configDecision == 'y':
         resetConfigFile()

@@ -27,9 +27,7 @@ def getInfoPlayer(userID: int):
         4: "Invisible"
     }
     playerPresence = presenceMap.get(presenceType, "Unknown")
-    placeIDFromLink = gameInfo()
-
-    placeIDToUse = placeIDFromPresence or placeIDFromLink
+    placeIDToUse = placeIDFromPresence
 
     gameData = getGameInfoFromPlace(placeIDToUse) if placeIDToUse else None
 
@@ -39,6 +37,10 @@ def getInfoPlayer(userID: int):
     if gameData:
         print("Game Name:", gameData["name"])
     print("-----------------------------------------")
+    return {
+        "name": playerName,
+        "status": playerPresence,
+    }
 
 def getGameInfoFromPlace(placeID: int):
     response = requests.get(f"{urlToGetGameInfo}{placeID}")

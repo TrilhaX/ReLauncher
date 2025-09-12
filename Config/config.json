@@ -1,0 +1,18 @@
+{
+    "idPlayer": [
+        2606311766
+    ],
+    "clients": [
+        "client"
+    ],
+    "clientToPlayer": {
+        "client": 2606311766
+    },
+    "clientToGame": {
+        "client": {
+            "placeID": "107573139811370",
+            "privateServerCode": "18050367136491800355603836084586"
+        }
+    },
+    "cdTime": 5
+}
