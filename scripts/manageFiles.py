@@ -26,7 +26,6 @@ def checkIfAlrSaved(filePath="Config/config.json"):
     return os.path.exists(filePath) and os.path.getsize(filePath) > 2
 
 def makeUrConfig():
-    resetConfigFile()
     rbxQuant = int(input("How many roblox do u want open?: "))
     for i in range(rbxQuant):
         idPlayer.append(int(input(f"Type the id of the player {i + 1}: ")))
@@ -40,6 +39,7 @@ def makeUrConfig():
 
     configDecision = input("Do you want to save this configuration? (y/n): ").lower()
     if configDecision == 'y':
+        resetConfigFile()
         configData = {
             "idPlayer": idPlayer,
             "clients": clients,

@@ -27,7 +27,7 @@ def getInfoPlayer(userID: int):
         4: "Invisible"
     }
     playerPresence = presenceMap.get(presenceType, "Unknown")
-    placeIDFromLink, privateServerCode = gameInfo()
+    placeIDFromLink = gameInfo()
 
     placeIDToUse = placeIDFromPresence or placeIDFromLink
 
