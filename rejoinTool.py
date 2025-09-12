@@ -1,6 +1,5 @@
-from scripts.getInfoPlayer import getInfoPlayer
 from scripts.createFiles import checkConfigFolder
-from scripts.manageFiles import saveConfig, loadConfig, resetConfigFile, checkIfAlrSaved, makeUrConfig
+from scripts.manageFiles import loadConfig, checkIfAlrSaved, makeUrConfig
 
 checkConfigFolder()
 if checkIfAlrSaved():
@@ -10,11 +9,10 @@ if checkIfAlrSaved():
         idPlayer = configData.get("idPlayer", [])
         clients = configData.get("clients", [])
         clientToPlayer = configData.get("clientToPlayer", {})
+        clientToGame = configData.get("clientToGame", {})
+        print(configData)
+        print("Configuration loaded successfully.")
     else:
         makeUrConfig()
 else:
     makeUrConfig()
-
-print(idPlayer)
-print(clients)
-print(clientToPlayer)

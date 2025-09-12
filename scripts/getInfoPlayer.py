@@ -1,9 +1,10 @@
 import requests
 import json
+from scripts.checklinks import gameInfo
 
 urlToGetPresence = "https://presence.roblox.com/v1/presence/users"
 urlToGetPlayerInfo = "https://users.roblox.com/v1/users/"
-urlToGetGameInfo = "https://games.roblox.com/v1/games?universeIds="
+urlToGetGameInfo = "https://games.roblox.com/v1/games/multiget-place-details?placeIds="
 
 def getInfoPlayer(userID: int):
     headers = {"Content-Type": "application/json"}
@@ -16,7 +17,7 @@ def getInfoPlayer(userID: int):
     respData = resp.json()
     playerPresenceJson = respData["userPresences"][0]
     presenceType = playerPresenceJson["userPresenceType"]
-    universeID = playerPresenceJson.get("universeId", 1962086868)
+    placeIDFromPresence = playerPresenceJson.get("placeId")
 
     presenceMap = {
         0: "Offline",
@@ -25,24 +26,34 @@ def getInfoPlayer(userID: int):
         3: "InStudio",
         4: "Invisible"
     }
-
     playerPresence = presenceMap.get(presenceType, "Unknown")
-    gameInfo = getGameInfo(universeID)
+    placeIDFromLink, privateServerCode = gameInfo()
+
+    placeIDToUse = placeIDFromPresence or placeIDFromLink
+
+    gameData = getGameInfoFromPlace(placeIDToUse) if placeIDToUse else None
 
     print("-----------------------------------------")
     print("Player:", playerName)
     print("Status:", playerPresence)
-    print("Game:", gameInfo)
+    if gameData:
+        print("Game Name:", gameData["name"])
     print("-----------------------------------------")
 
-def getGameInfo(universeIDAtual: int):
-    print(universeIDAtual)
-    allUrlGame = urlToGetGameInfo + str(universeIDAtual)
-    response = requests.get(allUrlGame)
-    respJson = response.json()
-    if "data" in respJson and len(respJson["data"]) > 0:
-        data = respJson["data"][0]
-        return data.get("name", "Unknown Game")
-    return "Unknown Game"
+def getGameInfoFromPlace(placeID: int):
+    response = requests.get(f"{urlToGetGameInfo}{placeID}")
+    if response.status_code != 200:
+        return {"name": "Unknown Game", "universeId": None, "creator": None}
+
+    data = response.json()
+    if "data" in data and len(data["data"]) > 0:
+        placeData = data["data"][0]
+        print(placeData)
+        return {
+            "name": placeData.get("name", "Unknown Game"),
+            "universeId": placeData.get("universeId"),
+            "creator": placeData.get("creator", {}).get("name", "Unknown Creator")
+        }
+    return {"name": "Unknown Game", "universeId": None, "creator": None}
 
 __all__ = ["getInfoPlayer"]

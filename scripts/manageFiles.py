@@ -1,8 +1,10 @@
 import json
 import os
+from scripts.checklinks import gameInfo
 idPlayer = []
 clients = []
 clientToPlayer = {}
+clientToGame = {}
 
 def saveConfig(data, filePath="Config/config.json"):
     with open(filePath, "w") as configFile:
@@ -28,15 +30,22 @@ def makeUrConfig():
     rbxQuant = int(input("How many roblox do u want open?: "))
     for i in range(rbxQuant):
         idPlayer.append(int(input(f"Type the id of the player {i + 1}: ")))
-        clients.append(input(f"Type the name (after the final dot) of the client {i + 1} (ex: cliena): "))
-        clientToPlayer[clients[i]] = idPlayer[i]  
-        
+        clients.append(input(f"Type the name (after the final dot) of the client {i + 1} (ex: cliena, Default is: client (if u use clone is diff)): "))
+        clientToPlayer[clients[i]] = idPlayer[i]    
+        placeID, privateServeLinkCode = gameInfo()
+        clientToGame[clients[i]] = {
+            "placeID": placeID,
+            "privateServerCode": privateServeLinkCode
+        }
+
     configDecision = input("Do you want to save this configuration? (y/n): ").lower()
     if configDecision == 'y':
         configData = {
             "idPlayer": idPlayer,
             "clients": clients,
-            "clientToPlayer": clientToPlayer
+            "clientToPlayer": clientToPlayer,
+            "clientToGame": clientToGame,
+            
         }
         saveConfig(configData)
 

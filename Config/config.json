@@ -1,8 +1,8 @@
 {
     "idPlayer": [
-        3120620682,
-        2606311766,
-        191837410
+        485882,
+        533484568,
+        8171059051
     ],
     "clients": [
         "clienb",
@@ -10,8 +10,22 @@
         "cliend"
     ],
     "clientToPlayer": {
-        "clienb": 3120620682,
-        "clienc": 2606311766,
-        "cliend": 191837410
+        "clienb": 485882,
+        "clienc": 533484568,
+        "cliend": 8171059051
+    },
+    "clientToGame": {
+        "clienb": {
+            "placeID": "107573139811370",
+            "privateServerCode": "18050367136491800355603836084586"
+        },
+        "clienc": {
+            "placeID": "107573139811370",
+            "privateServerCode": "18050367136491800355603836084586"
+        },
+        "cliend": {
+            "placeID": "107573139811370",
+            "privateServerCode": "18050367136491800355603836084586"
+        }
     }
 }
