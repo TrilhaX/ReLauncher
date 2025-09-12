@@ -6,7 +6,8 @@ urlToGetPresence = "https://presence.roblox.com/v1/presence/users"
 urlToGetPlayerInfo = "https://users.roblox.com/v1/users/"
 urlToGetGameInfo = "https://games.roblox.com/v1/games/multiget-place-details?placeIds="
 
-def getInfoPlayer(userID: int):
+
+def getInfoPlayer(userID: int, place_id=None):
     headers = {"Content-Type": "application/json"}
     payload = {"userIds": [userID]}
     allURLToPlayerInfo = urlToGetPlayerInfo + str(userID)
@@ -24,23 +25,24 @@ def getInfoPlayer(userID: int):
         1: "Online",
         2: "InGame",
         3: "InStudio",
-        4: "Invisible"
+        4: "Invisible",
     }
     playerPresence = presenceMap.get(presenceType, "Unknown")
-    placeIDToUse = placeIDFromPresence
+    placeIDToUse = placeIDFromPresence or place_id
 
     gameData = getGameInfoFromPlace(placeIDToUse) if placeIDToUse else None
 
     print("-----------------------------------------")
     print("Player:", playerName)
     print("Status:", playerPresence)
-    if gameData:
-        print("Game Name:", gameData["name"])
     print("-----------------------------------------")
     return {
         "name": playerName,
         "status": playerPresence,
+        "placeID": placeIDToUse,
+        "gameData": gameData["name"] if gameData else None,
     }
+
 
 def getGameInfoFromPlace(placeID: int):
     response = requests.get(f"{urlToGetGameInfo}{placeID}")
@@ -54,8 +56,9 @@ def getGameInfoFromPlace(placeID: int):
         return {
             "name": placeData.get("name", "Unknown Game"),
             "universeId": placeData.get("universeId"),
-            "creator": placeData.get("creator", {}).get("name", "Unknown Creator")
+            "creator": placeData.get("creator", {}).get("name", "Unknown Creator"),
         }
     return {"name": "Unknown Game", "universeId": None, "creator": None}
+
 
 __all__ = ["getInfoPlayer"]

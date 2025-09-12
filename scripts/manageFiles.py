@@ -46,6 +46,19 @@ def makeUrConfig():
 
     cdTime = int(input("Cooldown time (in seconds) to check if the player is in game (default is 10): ") or 10)
     configData["cdTime"] = cdTime
+    runAgainQuestion = input("Do you want to run again a specific client when the player is offline or just run again all clients when one is offline? (Specific/All, default is Specific): ").lower()
+    if runAgainQuestion in ["all"]:
+        configData["runSpecificClient"] = False
+    else:
+        configData["runSpecificClient"] = True
+    webhookDecision = input("Do you want to enable webhook notifications? (y/n, default is n): ").lower()
+    if webhookDecision == 'y':
+        configData["webhookEnabled"] = True
+        webhookURL = input("Type your webhook URL: ")
+        configData["webhookURL"] = webhookURL
+    else:
+        configData["webhookEnabled"] = False
+        configData["webhookURL"] = None
     configDecision = input("Do you want to save this configuration? (y/n): ").lower()
     if configDecision == 'y':
         resetConfigFile()

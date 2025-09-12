@@ -1,9 +1,9 @@
 from scripts.createFiles import checkConfigFolder
 from scripts.manageFiles import loadConfig, checkIfAlrSaved, makeUrConfig
 from scripts.getInfoPlayer import getInfoPlayer
-import subprocess
+from scripts.functions import runClient, sendWebhook
 import time
-
+lastStatus = {}
 checkConfigFolder()
 
 if checkIfAlrSaved():
@@ -23,28 +23,60 @@ clients = configData.get("clients", [])
 clientToPlayer = configData.get("clientToPlayer", {})
 clientToGame = configData.get("clientToGame", {})
 
-print(configData)
+cdTime = configData.get("cdTime", 10)
+webhookURL = configData.get("webhookURL", None)
+webhookEnabled = configData.get("webhookEnabled", False)
+runSpecificClient = configData.get("runSpecificClient", True)
 
-def runClient(client, place_id):
-    cmd = f"am start -a android.intent.action.VIEW -d roblox://placeId={place_id} com.roblox.{client}"
-    print(cmd)
-    print(f"Running for {client} -> placeID {place_id}")
-    subprocess.run(cmd, shell=True)
+print("Loaded configuration:", configData)
 
 def main():
+    for client in clients:
+        lastStatus[client] = None
+
     while True:
         for client in clients:
-            player_id = clientToPlayer[client]
+            player_id = clientToPlayer.get(client)
+            gameInfo = clientToGame.get(client, {})
+            place_id = gameInfo.get("placeID")
+
+            if not player_id or not place_id:
+                print(f"Missing info for {client}, skipping...")
+                continue
+
             playerPresence = getInfoPlayer(player_id)
-            status = playerPresence.get("status")
-            cdTime = configData.get("cdTime", 10)
+            status = playerPresence.get("status", "Offline")
+            playerName = playerPresence.get("name", f"Player {player_id}")
+
+            prevStatus = lastStatus.get(client)
+
+            if status != prevStatus:
+                if status != "InGame" and prevStatus == "InGame":
+                    print(f"{playerName} is offline in ({client}).")
+                    if webhookEnabled:
+                        sendWebhook(webhookURL, f"{playerName} is offline in ({client})")
+                elif status == "InGame" and prevStatus != "InGame":
+                    print(f"{playerName} is back in ({client}).")
+                    if webhookEnabled:
+                        sendWebhook(webhookURL, f"{playerName} is back in ({client})")
+
+            lastStatus[client] = status
 
             if status == "InGame":
-                print(f"{playerPresence['name']} está InGame ({client}).")
+                print(f"{playerName} is InGame ({client}).")
             else:
-                print(f"{playerPresence['name']} caiu ({status}) -> Reabrindo {client}...")
-                place_id = clientToGame[client]["placeID"]
-                runClient(client, place_id)
+                if runSpecificClient:
+                    print(f"{playerName} is ({status}) -> Reopening {client}...")
+                    runClient(client, place_id)
+                else:
+                    print("Reopening all clients...")
+                    for cl in clients:
+                        cl_place_id = clientToGame.get(cl, {}).get("placeID")
+                        if cl_place_id:
+                            runClient(cl, cl_place_id)
+                        else:
+                            print(f"Missing placeID for {cl}, skipping...")
+
         time.sleep(cdTime)
 
 if __name__ == "__main__":
