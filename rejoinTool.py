@@ -25,15 +25,7 @@ print(configData)
 
 for client in clients:
     place_id = clientToGame[client]["placeID"]
-    client_id = clientToPlayer[client]
-
-    cmd = [
-        "adb", "shell",
-        "am", "start",
-        "-a", "android.intent.action.VIEW",
-        "-d", f"roblox://placeId={place_id}",
-        f"com.roblox.{client_id}"
-    ]
-
+    cmd = f"am start -a android.intent.action.VIEW -d `roblox://placeId={place_id}` com.roblox.{client}"
+    print(cmd)
     print(f"Running for {client} -> placeID {place_id}")
-    subprocess.run(cmd)
+    subprocess.run(cmd, shell=True)
