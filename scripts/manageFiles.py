@@ -37,16 +37,18 @@ def makeUrConfig():
             "privateServerCode": privateServeLinkCode
         }
 
+    configData = {
+        "idPlayer": idPlayer,
+        "clients": clients,
+        "clientToPlayer": clientToPlayer,
+        "clientToGame": clientToGame,
+    }
+
     configDecision = input("Do you want to save this configuration? (y/n): ").lower()
     if configDecision == 'y':
         resetConfigFile()
-        configData = {
-            "idPlayer": idPlayer,
-            "clients": clients,
-            "clientToPlayer": clientToPlayer,
-            "clientToGame": clientToGame,
-            
-        }
         saveConfig(configData)
 
-__all__ = ["saveConfig", "loadConfig"]
+    return configData
+
+__all__ = ["saveConfig", "loadConfig", "resetConfigFile", "checkIfAlrSaved", "makeUrConfig"]
