@@ -10,20 +10,22 @@ def saveConfig(data, filePath="Config/config.json"):
     with open(filePath, "w") as configFile:
         json.dump(data, configFile, indent=4)
         
-def loadConfig(filePath="Config/config.json"):
-    if not os.path.exists(filePath):
-        return {}
+def loadConfig(filePath):
     with open(filePath, "r") as configFile:
         return json.load(configFile)
     
-def resetConfigFile(filePath="Config/config.json"):
+def resetConfigFile(filePath):
     if os.path.exists(filePath):
         os.remove(filePath)
     with open(filePath, "w") as configFile:
         json.dump({}, configFile, indent=4)
-        
-def checkIfAlrSaved(filePath="Config/config.json"):
-    return os.path.exists(filePath) and os.path.getsize(filePath) > 2
+
+def checkIfAlrSaved(folderPath="Config/"):
+    if not os.path.exists(folderPath):
+        return False
+    json_files = [f for f in os.listdir(folderPath) 
+                if f.endswith(".json") and os.path.getsize(os.path.join(folderPath, f)) > 0]
+    return len(json_files) > 0
 
 def makeUrConfig():
     rbxQuant = int(input("How many roblox do u want open?: "))
@@ -31,11 +33,18 @@ def makeUrConfig():
         idPlayer.append(int(input(f"Type the id of the player {i + 1}: ")))
         clients.append(input(f"Type the name (after the final dot) of the client {i + 1} (ex: cliena, Default is: client (if u use clone is diff)): "))
         clientToPlayer[clients[i]] = idPlayer[i]    
+        psDecision = input(f"Do you want to use a private server link for the {clients[i]}? (y/n, default is n): ").lower()
         placeID, privateServeLinkCode = gameInfo()
-        clientToGame[clients[i]] = {
-            "placeID": placeID,
-            "privateServerCode": privateServeLinkCode
-        }
+        if psDecision == 'y':
+            clientToGame[clients[i]] = {
+                "placeID": placeID,
+                "privateServerCode": privateServeLinkCode
+            }
+        else:
+            clientToGame[clients[i]] = {
+                "placeID": placeID,
+                "privateServerCode": None
+            }
 
     configData = {
         "idPlayer": idPlayer,
@@ -60,9 +69,9 @@ def makeUrConfig():
         configData["webhookEnabled"] = False
         configData["webhookURL"] = None
     configDecision = input("Do you want to save this configuration? (y/n): ").lower()
+    nameOfConfig = input("Type the name of the configuration file (default is config): ") or "config"
     if configDecision == 'y':
-        resetConfigFile()
-        saveConfig(configData)
+        saveConfig(configData, filePath=f"Config/{nameOfConfig}.json")
 
     return configData
 

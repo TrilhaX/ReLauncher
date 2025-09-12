@@ -9,7 +9,9 @@ checkConfigFolder()
 if checkIfAlrSaved():
     loadDecision = input("Do you want to load the last configuration? (y/n): ").lower()
     if loadDecision == 'y':
-        configData = loadConfig()
+        configName = input("Type the name of the configuration file (default is config): ") or "config"
+        filePath = f"Config/{configName}.json"
+        configData = loadConfig(filePath)
         print("Configuration loaded successfully.")
     else:
         configData = makeUrConfig()
