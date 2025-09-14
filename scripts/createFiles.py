@@ -4,22 +4,17 @@ import os
 def createConfigFolder():
     if not os.path.exists("Config"):
         os.makedirs("Config")
-        createConfigJson()
+        print("Created 'Config' folder.")
 
 def createConfigJson():
-    if not os.path.exists("Config/config.json"):
-        configData = {}
-        with open("Config/config.json", "w") as configFile:
-            json.dump(configData, configFile, indent=4)
+    filePath = "Config/config.json"
+    if not os.path.exists(filePath):
+        with open(filePath, "w") as configFile:
+            json.dump({}, configFile, indent=4)
+            print("Created 'Config/config.json' file.")
 
 def checkConfigFolder():
-    import os
-    if os.path.exists("Config"):
-        if not os.path.exists("Config/config.json"):
-            createConfigJson()
-        return True
-    else:
-        createConfigFolder()
-        return False
+    createConfigFolder()
+    createConfigJson()
 
 __all__ = ["checkConfigFolder"]
