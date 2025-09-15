@@ -4,7 +4,6 @@ from scripts.getInfoPlayer import getInfoPlayer
 from scripts.functions import runClient, sendWebhook
 import time
 import sys
-import os
 
 lastStatus = {}
 
