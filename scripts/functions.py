@@ -36,4 +36,3 @@ def sendWebhook(url, message):
         print(f"Error sending webhook: {e}")
 
 __all__ = ["runClient", "sendWebhook"]
-#Its to all work

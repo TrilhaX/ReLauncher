@@ -52,23 +52,25 @@ def makeUrConfig():
             
             configData["clients"].append(client_name)
             configData["clientToPlayer"][client_name] = player_id
-            
             psDecision = input(f"Do you want to use a private server link for '{client_name}'? (y/n, default is n): ").lower()
-            
-            placeID, privateServerLinkCode = gameInfo()
+            placeID = None
+            privateServerLinkCode = None
+
+            if psDecision == 'y':
+                placeID, privateServerLinkCode = gameInfo()
+            else:
+                placeID_input = input("Send the PlaceID of the game: ")
+                if placeID_input.isdigit():
+                    placeID = int(placeID_input)
+                else:
+                    print("Invalid PlaceID. Skipping game configuration for this client.")
+                    continue
             
             if placeID:
-                if psDecision == 'y':
-                    configData["clientToGame"][client_name] = {
-                        "placeID": placeID,
-                        "privateServerCode": privateServerLinkCode
-                    }
-                else:
-                    placeID = int(input("Send the PlaceID of game: "))
-                    configData["clientToGame"][client_name] = {
-                        "placeID": placeID,
-                        "privateServerCode": None
-                    }
+                configData["clientToGame"][client_name] = {
+                    "placeID": placeID,
+                    "privateServerCode": privateServerLinkCode
+                }
             else:
                 print("Could not get game info. Skipping game configuration for this client.")
                 
@@ -92,11 +94,5 @@ def makeUrConfig():
         print(f"An error occurred during configuration creation: {e}")
         
     return configData
-    
-def resetConfigFile(filePath):
-    if os.path.exists(filePath):
-        os.remove(filePath)
-    with open(filePath, "w") as configFile:
-        json.dump({}, configFile, indent=4)
 
 __all__ = ["saveConfig", "loadConfig", "resetConfigFile", "checkIfAlrSaved", "makeUrConfig"]

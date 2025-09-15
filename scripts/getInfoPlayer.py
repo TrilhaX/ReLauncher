@@ -14,7 +14,7 @@ def getInfoPlayer(userID: int):
         data = player_info_resp.json()
         playerName = data.get("name", "Unknown")
         
-        time.sleep(1) 
+        time.sleep(2) 
 
         headers = {"Content-Type": "application/json"}
         payload = {"userIds": [userID]}
@@ -58,7 +58,7 @@ def getInfoPlayer(userID: int):
 
 def getGameInfoFromPlace(placeID: int):
     try:
-        time.sleep(1)
+        time.sleep(2) 
         response = requests.get(f"{urlToGetGameInfo}{placeID}")
         response.raise_for_status()
         data = response.json()
