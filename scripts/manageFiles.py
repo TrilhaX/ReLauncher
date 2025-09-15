@@ -64,6 +64,7 @@ def makeUrConfig():
                         "privateServerCode": privateServerLinkCode
                     }
                 else:
+                    placeID = int(input("Send the PlaceID of game: "))
                     configData["clientToGame"][client_name] = {
                         "placeID": placeID,
                         "privateServerCode": None
