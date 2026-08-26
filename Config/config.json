@@ -1,0 +1,23 @@
+{
+    "clients": [
+        "TempestGpo2",
+        "AngelsSecrets1"
+    ],
+    "clientToPlayer": {
+        "AngelsSecrets1": "110242206",
+        "TempestGpo2": "5011154651"
+    },
+    "clientToGame": {
+        "AngelsSecrets1": {
+            "placeID": "102072869879193",
+            "privateServerCode": ""
+        },
+        "TempestGpo2": {
+            "placeID": "84515722934860",
+            "privateServerCode": ""
+        }
+    },
+    "cdTime": 10,
+    "webhookURL": null,
+    "webhookEnabled": false
+}

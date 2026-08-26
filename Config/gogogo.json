@@ -1,0 +1,18 @@
+{
+    "clients": [
+        "clienu"
+    ],
+    "clientToPlayer": {
+        "clienu": 5011154651
+    },
+    "clientToGame": {
+        "clienu": {
+            "placeID": 84515722934860,
+            "privateServerCode": null
+        }
+    },
+    "cdTime": 10,
+    "runSpecificClient": true,
+    "webhookEnabled": false,
+    "webhookURL": null
+}
